@@ -22,6 +22,11 @@ class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
         self.press = DriverKeyPress(self)
         self._implicit_wait = 0
     
+    def type_in(self, string):
+        action = ActionChains(self)
+        action.send_keys(string)
+        action.perform()
+    
     @property
     def implicit_wait(self):
         return self._implicit_wait
