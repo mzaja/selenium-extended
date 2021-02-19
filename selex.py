@@ -28,16 +28,16 @@ class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
         type_in: Blindly types in the text into the browser (no particular element selected).
         slow_type: Blindly types the text into the browser with a variable time delay between characters.
     """
-    def __init__(self, browser: str):
+    def __init__(self, browser: str, **kwargs):
         browser = browser.capitalize()
         if browser not in SUPPORTED_BROWSERS:
             raise TypeError(f"Browser must be one of: {SUPPORTED_BROWSERS}")
         else:
-            getattr(webdriver, browser).__init__(self)
+            getattr(webdriver, browser).__init__(self, **kwargs)
         
         self._web_element_cls = WebElement      # return custom WebElement class using this webdriver
         
-        self.press = DriverKeyPress(self)       # 
+        self.press = DriverKeyPress(self)       # create interface for simulating key presses
         
         self._implicit_wait = 0                 # sets the default implicit_wait value
     
