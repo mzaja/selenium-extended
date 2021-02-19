@@ -1,15 +1,32 @@
+import random
+import time
+
 from selenium import webdriver
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, WebDriverException
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement as BaseWebElement
 
 SUPPORTED_BROWSERS = ['Chrome', 'Firefox', 'Ie', 'Edge']
 
 class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
     """
     A custom Selenium webdriver with extended functionality.
+    
+    Parameters:
+        browser (str): Name of the browser to start the webdriver for. Must be one of: ['Chrome', 'Firefox', 'Ie', 'Edge']
+        
+    Attributes:
+        press (KeyPress): Simulates key pressess by calling the appropriately named method e.g. press.ENTER().
+        implicit_wait (property): Getting the property returns the current implicit wait time of the webdriver.
+                                  Setting the property automatically calls the driver.implicitly_wait() method with the new value.
+                                  
+    Methods:
+        find_element_by_text: Returns the first element with the fully or partially matching textual value. 
+        find_elements_by_text: Returns a list of elements with the fully or partially matching textual values.
+        type_in: Blindly types in the text into the browser (no particular element selected).
+        slow_type: Blindly types the text into the browser with a variable time delay between characters.
     """
     def __init__(self, browser: str):
         browser = browser.capitalize()
@@ -18,17 +35,15 @@ class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
         else:
             getattr(webdriver, browser).__init__(self)
         
-        self._web_element_cls = Element     # return custom WebElement class using this webdriver
-        self.press = DriverKeyPress(self)
-        self._implicit_wait = 0
-    
-    def type_in(self, string):
-        action = ActionChains(self)
-        action.send_keys(string)
-        action.perform()
+        self._web_element_cls = WebElement      # return custom WebElement class using this webdriver
+        
+        self.press = DriverKeyPress(self)       # 
+        
+        self._implicit_wait = 0                 # sets the default implicit_wait value
     
     @property
     def implicit_wait(self):
+        """Returns the duration (in seconds) of the implicit wait webdriver performs when searching for elements."""
         return self._implicit_wait
     
     @implicit_wait.setter
@@ -45,13 +60,34 @@ class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
     def find_elements_by_text(self, text: str, exact_match: bool = False):
         """Finds and returns elements by their text value."""
         return find_elements_by_text(self, False, text, exact_match)
-    
+     
+    def type_in(self, string):
+        """Types in the provided string into the browser window (to no particular element)."""
+        action = ActionChains(self)
+        action.send_keys(string)
+        action.perform()
+        
+    def slow_type(self, text: str, max_delay: float = 0.5, min_delay: float = 0.1):
+        """Types the text into the browser with a variable delay between characters."""
+        for char in text:
+            self.type_in(char)
+            random_wait(max_delay, min_delay)
 
-class Element(WebElement):
+
+class WebElement(BaseWebElement):
     """
-    A custom WebElement class returned by the custom Selenium webdriver.
-    """
+    A custom WebElement class returned by the custom Selenium webdriver. 
+    Returned by the Driver class and should not be instantiated directly.
     
+    Attributes:
+        press (KeyPress): Simulates key pressess by calling the appropriately named method e.g. press.ENTER().
+                          Keys are sent into the element (rather than the browser itself as with the Driver class).
+    
+    Methods:
+        find_element_by_text: Returns the first sub-element with the fully or partially matching textual value. 
+        find_elements_by_text: Returns a list of sub-elements with the fully or partially matching textual values.
+        slow_type: Types the text into the element with a variable time delay between characters.
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.press = ElemKeyPress(self)
@@ -64,8 +100,16 @@ class Element(WebElement):
         """Finds and returns elements by their text value."""
         return find_elements_by_text(self._parent, False, text, exact_match)
 
+    def slow_type(self, text: str, max_delay: float = 0.5, auto_clear: bool = True, min_delay: float = 0.1):
+        """Types the text into this element with a variable delay between characters."""
+        if auto_clear == True:
+            self.clear()
+        for char in text:
+            self.send_keys(char)
+            random_wait(max_delay, min_delay)
 
-class BaseKeyPress:
+
+class KeyPress:
     """
     Base KeyPress class. 
     Allows creation of two separate KeyPress classes, one for the driver and ther other for web elements.
@@ -74,9 +118,10 @@ class BaseKeyPress:
         self.keys = tuple(x for x in dir(Keys) if not x.startswith('__'))
 
 
-class DriverKeyPress(BaseKeyPress):
+class DriverKeyPress(KeyPress):
     """
-    Simulates key presses in a simple and convenient way. 
+    Simulates key presses in a simple and convenient way, e.g. driver.press.ENTER().
+    Keys are sent into the browser without focus on any particuar element.
     """
     def __init__(self, driver):
         super().__init__()
@@ -94,19 +139,37 @@ class DriverKeyPress(BaseKeyPress):
         action.perform()
 
 
-class ElemKeyPress(BaseKeyPress):
+class ElemKeyPress(KeyPress):
     """
-    Simulates key presses in a simple and convenient way. 
+    Simulates key presses in a simple and convenient way, e.g. element.press.ENTER().
+    Keys are sent into a particuar web element.
     """
     def __init__(self, element):
         super().__init__()
         self._element = element
         for key_name in self.keys:
             setattr(self, key_name, lambda x=getattr(Keys, key_name): self._element.send_keys(x))
+
+
+def chrome_options(user_data_path: str, profile_name: str = 'Default'):
+    """Returns the webdriver Chrome options for the provided user data path and profile name."""
+    options = ChromeOptions()
+    options.add_argument(f"--user-data-dir={user_data_path}")
+    options.add_argument(f"--profile-directory={profile_name}")
+    options.add_argument("--disable-blink-features=AutomationControlled")   # mentioned on stack exchange
+    return options
+
+
+def random_wait(max_wait: float, min_wait: float = 0):
+    """Waits for a random time between min_wait and max_wait."""
+    time.sleep(random.uniform(min_wait, max_wait))
             
 
 def find_elements_by_text(driver: Driver, return_one: bool, text: str, exact_match: bool):
-    """Finds element(s) by their text. A base function for Driver and Element class methods"""
+    """
+    Finds element(s) by their text. 
+    A base function for Driver and Element class methods, not to be invoked directly.
+    """
     contains_query = f"//*[contains(text(), '{text}')]"
     exact_query = f"//*[text()='{text}']"
     query = exact_query if exact_match == True else contains_query
@@ -116,7 +179,7 @@ def find_elements_by_text(driver: Driver, return_one: bool, text: str, exact_mat
 
 def wait(time: float): 
     """
-    Intended to be used as a decorator within the Driver class. 
+    Intended for use as a decorator within the Driver class. 
     Forces the implicit wait on executing the class methods.
     Example:
         @wait(5)
@@ -127,7 +190,7 @@ def wait(time: float):
     def decorator(method):
         def wrapper(self, *args, **kwargs):
             old_wait = self.implicit_wait
-            self.implicit_wait = new_wait
+            self.implicit_wait = time
             try:
                 return method(self, *args, **kwargs)
             finally:
@@ -154,7 +217,7 @@ def wait_factory(driver_attr_name: str):
     """
     def wait(time: float): 
         """
-        Intended to be used as a decorator within the Driver class. 
+        Intended for use as a decorator within the Driver class. 
         Forces the implicit wait on executing the class methods.
         Example:
             @wait(5)
@@ -165,7 +228,7 @@ def wait_factory(driver_attr_name: str):
         def decorator(method):
             def wrapper(self, *args, **kwargs):
                 old_wait = getattr(self, driver_attr_name).implicit_wait
-                getattr(self, driver_attr_name).implicit_wait = new_wait
+                getattr(self, driver_attr_name).implicit_wait = time
                 try:
                     return method(self, *args, **kwargs)
                 finally:
