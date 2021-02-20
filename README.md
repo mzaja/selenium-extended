@@ -35,7 +35,7 @@ elem.slow_type("Typing slowly.", max_delay=1, min_delay=0.3)  # sent to the elem
 ### Implicit wait
 The **implicit_wait** property simplifies interacting with the webdriver's **implicitly_wait()** mechanic.
 ```python
-wait = driver.implicit_wait  # retrieves the current implicit wait time setting
+current_wait = driver.implicit_wait  # retrieves the current implicit wait time setting
 driver.implicit_wait = 5  # sets the implicit wait to 5 seconds
 ```
 The **@wait(time)** decorator can be used to force the user-specified **implicit_wait** time on a class method's execution.
