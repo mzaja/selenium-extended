@@ -33,6 +33,7 @@ driver.slow_type("I am a human!")  # sent to the browser
 elem.slow_type("Typing slowly.", max_delay=1, min_delay=0.3)  # sent to the element with additional parameters
 ```
 ### Screenshotting elements
+Save web elements as png images with zero effort.
 ```python
 elem.save_as_png("Pretty element.png")
 ```
