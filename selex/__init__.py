@@ -1,1 +1,1 @@
-from selex import *
+from .selex import *
