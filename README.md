@@ -20,8 +20,8 @@ driver.find_elements_by_text("GitHub", exact_match = True)  # returns all elemen
 ```python
 driver.press.ENTER()  # simulates the ENTER keypress
 driver.press.TAB()	 # simulates the TAB keypress
-elem = driver.find_element_by_id("form")	 # locate a sample element
-elem.press.DELETE()	# press DELETE with the element in focus
+elem = driver.find_element_by_id("form")  # locate a sample element
+elem.press.DELETE()	 # press DELETE with the element in focus
 ```
 Longer key press sequences can be emulated using the **type_in** method.
 ```python
@@ -31,6 +31,10 @@ More realistic human typing can be simulated using the **slow_type** method. Del
 ```python
 driver.slow_type("I am a human!")  # sent to the browser
 elem.slow_type("Typing slowly.", max_delay=1, min_delay=0.3)  # sent to the element with additional parameters
+```
+### Screenshotting elements
+```python
+elem.save_as_png("Pretty element.png")
 ```
 ### Implicit wait
 The **implicit_wait** property simplifies interacting with the webdriver's **implicitly_wait()** mechanic.

@@ -1,3 +1,4 @@
+import os
 import random
 import time
 
@@ -99,6 +100,13 @@ class WebElement(BaseWebElement):
     def find_elements_by_text(self, text: str, exact_match: bool = False):
         """Finds and returns elements by their text value."""
         return find_elements_by_text(self._parent, False, text, exact_match)
+
+    def save_as_png(self, output_file: str):
+        """Saves the web element as a PNG image. 'output_file' does not need to include the .png extension."""     
+        if os.path.splitext(output_file)[1] == '':   # append .png extension if none exists
+            output_file += '.png'   
+        with open(output_file,"wb") as f:  # save the element screenshot as .png
+            f.write(self.screenshot_as_png)
 
     def slow_type(self, text: str, max_delay: float = 0.5, auto_clear: bool = True, min_delay: float = 0.1):
         """Types the text into this element with a variable delay between characters."""
