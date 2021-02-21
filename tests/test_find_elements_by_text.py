@@ -5,74 +5,112 @@ from tests.setup import test_setup
 from selex import *
 
 driver, webelem = test_setup()  # initialize the webdriver and create a test webelement object
-          
 
-def test_find_element_by_text(self, driver):
-    """
-    Tests the 'find_element_by_text' method. Param 'driver' can be either a webdriver or a webelement object.
-    """       
-    test_phrase = "Nonexistent text"    # initial test phrase
-    
-    with self.assertRaises(NoSuchElementException):     # test raising an exception on no match
-        elem = driver.find_element_by_text(test_phrase)  
-    
-    test_phrase = "Heading"     # new test phrase
 
-    elem = driver.find_element_by_text(test_phrase)     # test finding a non-exact match
-    assert test_phrase in elem.text
-    
-    with self.assertRaises(NoSuchElementException):     # test raising an exception on no matches
-        elem = driver.find_element_by_text(test_phrase, exact_match=True)  
+def single_no_match(self, driver):
+    test_phrase = "Nonexistent text"
+    with self.assertRaises(NoSuchElementException):
+        elem = driver.find_element_by_text(test_phrase, exact_match=False)      
 
-    test_phrase = "Heading 1"       # new test phrase
-    
-    elem = driver.find_element_by_text(test_phrase, exact_match=True)   # test finding an exact match
-    assert test_phrase == elem.text
-    
+def single_match(self, driver):
+    test_phrase = "Heading"
+    elem = driver.find_element_by_text(test_phrase, exact_match=False)
+    self.assertIn(test_phrase, elem.text)
 
-def test_find_elements_by_text(self, driver):
-    """
-    Tests the 'find_elements_by_text' method. Param 'driver' can be either a webdriver or a webelement object.
-    """
-    test_phrase = "Nonexistent text"    # initial test phrase
-    
-    elems = driver.find_elements_by_text(test_phrase)   # test non-existent, non-exact matches
-    assert len(elems) == 0
-    
-    test_phrase = "Heading"     # new test phrase
-    
-    elems = driver.find_elements_by_text(test_phrase)   # test non-exact matches
-    assert len(elems) == 3
+def single_no_match_exact(self, driver):
+    test_phrase = "Heading"
+    with self.assertRaises(NoSuchElementException):
+        elem = driver.find_element_by_text(test_phrase, exact_match=True)      
+
+def single_match_exact(self, driver):
+    test_phrase = "Heading 1"
+    elem = driver.find_element_by_text(test_phrase, exact_match=True)
+    self.assertEqual(elem.text, test_phrase)
+
+
+def multi_no_match(self, driver):
+    test_phrase = "Nonexistent text"   
+    elems = driver.find_elements_by_text(test_phrase, exact_match=False)
+    self.assertEqual(len(elems), 0)
+
+def multi_match(self, driver):
+    test_phrase = "Heading"
+    elems = driver.find_elements_by_text(test_phrase, exact_match=False)
+    self.assertEqual(len(elems), 3)
     for elem in elems:
-        assert test_phrase in elem.text
+        self.assertIn(test_phrase, elem.text)
 
-    elems = driver.find_elements_by_text(test_phrase, exact_match=True)   # test non-exact matches
-    assert len(elems) == 0
-    
-    test_phrase = "Heading 1"     # new test phrase
-    
-    elems = driver.find_elements_by_text(test_phrase)   # test non-exact matches
-    assert len(elems) == 1
+def multi_no_match_exact(self, driver):
+    test_phrase = "Heading"
+    elems = driver.find_elements_by_text(test_phrase, exact_match=True)
+    self.assertEqual(len(elems), 0)
+
+def multi_match_exact(self, driver):
+    test_phrase = "Heading 1"
+    elems = driver.find_elements_by_text(test_phrase, exact_match=True)
+    self.assertEqual(len(elems), 1)
     for elem in elems:
-        assert test_phrase in elem.text
+        self.assertEqual(test_phrase, elem.text)
 
 
-class DriverTest(unittest.TestCase):
+class DriverFindElementByTextTest(unittest.TestCase):
     
-    def test_find_element_by_text(self):
-        test_find_element_by_text(self, driver)
-        
-    def test_find_elements_by_text(self):
-        test_find_elements_by_text(self, driver)
-
-
-class ElemTest(unittest.TestCase):
+    def setUp(self):
+        self.subject = driver
     
-    def test_find_element_by_text(self):
-        test_find_element_by_text(self, webelem)
-        
-    def test_find_elements_by_text(self):
-        test_find_elements_by_text(self, webelem)
+    def test_single_no_match(self):
+        single_no_match(self, self.subject)
+    
+    def test_single_match(self):
+        single_match(self, self.subject)
+    
+    def test_single_no_match_exact(self):
+        single_no_match(self, self.subject)
+    
+    def test_single_match_exact(self):
+        single_match(self, self.subject)
+
+    def test_multi_no_match(self):
+        multi_no_match(self, self.subject)
+    
+    def test_multi_match(self):
+        multi_match(self, self.subject)
+    
+    def test_multi_no_match_exact(self):
+        multi_no_match(self, self.subject)
+    
+    def test_multi_match_exact(self):
+        multi_match(self, self.subject)
+
+
+class ElemFindElementByTextTest(unittest.TestCase):
+    
+    def setUp(self):
+        self.subject = webelem
+    
+    def test_single_no_match(self):
+        single_no_match(self, self.subject)
+    
+    def test_single_match(self):
+        single_match(self, self.subject)
+    
+    def test_single_no_match_exact(self):
+        single_no_match(self, self.subject)
+    
+    def test_single_match_exact(self):
+        single_match(self, self.subject)
+
+    def test_multi_no_match(self):
+        multi_no_match(self, self.subject)
+    
+    def test_multi_match(self):
+        multi_match(self, self.subject)
+    
+    def test_multi_no_match_exact(self):
+        multi_no_match(self, self.subject)
+    
+    def test_multi_match_exact(self):
+        multi_match(self, self.subject)
             
 
 if __name__ == "__main__":
