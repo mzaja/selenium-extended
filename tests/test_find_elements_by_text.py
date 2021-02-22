@@ -1,10 +1,7 @@
 import unittest
-from functools import partial
 
-from tests.setup import test_setup
+from tests.setup import BaseTestCase
 from selex import *
-
-driver, webelem = test_setup()  # initialize the webdriver and create a test webelement object
 
 
 def single_no_match(self, driver):
@@ -53,10 +50,13 @@ def multi_match_exact(self, driver):
         self.assertEqual(test_phrase, elem.text)
 
 
-class DriverFindElementByTextTest(unittest.TestCase):
+#class DriverFindElementsByTextTest(unittest.TestCase):
+class DriverFindElementsByTextTest(BaseTestCase):
     
-    def setUp(self):
-        self.subject = driver
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.subject = cls.driver
     
     def test_single_no_match(self):
         single_no_match(self, self.subject)
@@ -83,10 +83,12 @@ class DriverFindElementByTextTest(unittest.TestCase):
         multi_match(self, self.subject)
 
 
-class ElemFindElementByTextTest(unittest.TestCase):
+class ElemFindElementsByTextTest(BaseTestCase):
     
-    def setUp(self):
-        self.subject = webelem
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.subject = cls.elem
     
     def test_single_no_match(self):
         single_no_match(self, self.subject)
@@ -114,7 +116,4 @@ class ElemFindElementByTextTest(unittest.TestCase):
             
 
 if __name__ == "__main__":
-    try:
-        unittest.main(exit=False)
-    finally:
-        driver.quit()
+    unittest.main(exit=False)
