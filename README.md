@@ -1,5 +1,12 @@
+
 # selenium-extended
  Extends the Selenium webdriver with additional functionality.
+ - Finding elements by text
+ - Interface for easy key press emulation
+ - Time-delayed text typing
+ - Screenshotting elements
+ - Implicit wait getters, setters and decorators
+ - Chrome profile selector
 
 ## Example usage
 ### Initialization
