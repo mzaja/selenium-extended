@@ -1,20 +1,21 @@
 import os
-from collections import namedtuple
 import unittest
+from collections import namedtuple
+from time import sleep
 
 from selex import Driver
 
 # driver, _ = test_setup()
 
 TestObjects = namedtuple("SelexObjects", "driver elem")
+test_website = r"resources\test_website.html"
 
 def test_website_path():
     """"Returns the full path to the test website: Making the testing machine-invariant."""
-    test_website = "test_website.html"
     try:
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), test_website)
     except NameError:   # if __file__ is not defined
-        path = os.path.join(os.getcwd(), "tests", test_website)
+        path = os.path.join(os.getcwd(), "tests", test_website)     # assumes cwd is the selenium-extended repository
     return path
     
 def test_setup():
@@ -47,4 +48,6 @@ class BaseTestCase(unittest.TestCase):
             
 
 if __name__ == "__main__":
-    pass
+    driver = test_setup().driver    # ensure the web page opens correctly
+    sleep(5)
+    driver.quit()

@@ -1,5 +1,5 @@
-# temporary test file
-#workbench.py
+# temporary test files
+workbench*.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

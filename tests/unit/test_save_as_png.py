@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from PIL import Image
@@ -20,8 +21,8 @@ def compare_images(img1: str, img2: str):
         obj1.close()
         obj2.close()
 
-test_image = "tests\\image1.png"
-saved_image = "tests\\saved_image.png"
+test_image = r"tests\resources\image1.png"
+saved_image = r"tests\resources\saved_image.png"
 
 class ElemSaveAsPngTest(BaseTestCase):
     

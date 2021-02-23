@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 class KeyPress:
     """
     Base KeyPress class. 
-    Allows creation of two separate KeyPress classes, one for the driver and ther other for web elements.
+    Allows creation of two separate KeyPress classes, one for the driver and the other one for web elements.
     """
     def __init__(self):
         self.keys = tuple(x for x in dir(Keys) if not x.startswith('__'))

@@ -50,7 +50,6 @@ def multi_match_exact(self, driver):
         self.assertEqual(test_phrase, elem.text)
 
 
-#class DriverFindElementsByTextTest(unittest.TestCase):
 class DriverFindElementsByTextTest(BaseTestCase):
     
     @classmethod
