@@ -23,13 +23,13 @@ driver.find_elements_by_text("GitHub")  # returns all elements whose text contai
 driver.find_elements_by_text("GitHub", exact_match = True)  # returns all elements whose text is precisely "GitHub"
 ```
 ### Find ancestor
-WebElements can return their n-th ancestor. The ancestor's generation is selected using the **level** parameter. 
+Web elements can return their n-th ancestor. The ancestor's generation is selected using the **level** parameter. 
 ```python
 elem = driver.find_element_by_id("input")  # locate a sample element
 elem.find_ancestor(level = 1)	# returns the parent (1 level up)
 elem.find_ancestor(level = 2)	# returns the grandpparent (2 levels up)
 ```
-Both recursive and non-recursive search is supported. Recursive search is slower but always returns a result. Non-recursive search raises an exception when the ancestor's generation exceeds the docuument's boundaries.
+Both recursive and non-recursive search is supported. Recursive search is slower but always returns a result. Non-recursive search raises an exception when the ancestor's generation exceeds the document's boundaries.
 ```python
 elem.find_ancestor(level = 999, recursive = True)	# (virtually always) returns the whole web page
 elem.find_ancestor(level = 999, recursive = False)	# raises NoSuchElementException
