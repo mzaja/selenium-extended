@@ -27,7 +27,7 @@ Web elements can return their n-th ancestor. The ancestor's generation is select
 ```python
 elem = driver.find_element_by_id("input")  # locate a sample element
 elem.find_ancestor(level = 1)	# returns the parent (1 level up)
-elem.find_ancestor(level = 2)	# returns the grandpparent (2 levels up)
+elem.find_ancestor(level = 2)	# returns the grandparent (2 levels up)
 ```
 Both recursive and non-recursive search is supported. Recursive search is slower but always returns a result. Non-recursive search raises an exception when the ancestor's generation exceeds the document's boundaries.
 ```python
