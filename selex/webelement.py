@@ -1,5 +1,6 @@
 import os
 
+from selenium.common.exceptions import NoSuchElementException, InvalidSelectorException
 from selenium.webdriver.remote.webelement import WebElement as BaseWebElement
 
 from .keypress import ElemKeyPress
@@ -23,6 +24,37 @@ class WebElement(BaseWebElement):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.press = ElemKeyPress(self)
+    
+    def find_ancestor(self, level: int = 1, recursive: bool = True):
+        """
+        Returns the n-th ancestor of the current web element.
+        
+        Parameters:
+            level (int): Generation of the ancestor element to be returned (1: parent, 2: grandparent etc.)
+            recursive (bool): If True, the ancestor element is searched for recursively. 
+                              If level exceeds the number of ancestors, the last ancestor is returned.
+                              if False, the search is faster but a NoSuchElement exception is raised on a nonexistant ancestor.
+        """
+        err_msg_neg_non_int = "Parameter 'level' must be a non-negative integer."
+        if type(level) != int:
+            raise TypeError(err_msg_neg_non_int)
+        if level < 0:
+            raise ValueError(err_msg_neg_non_int)
+        if level == 0:
+            return self
+        if level > 0:
+            if recursive == True:
+                try:
+                    parent = self.find_element_by_xpath("..")
+                    return parent.find_ancestor(level - 1, recursive=True)
+                except InvalidSelectorException:
+                    return self
+            else: # if recursive == False
+                try:
+                    return self.find_element_by_xpath(".." + (level-1) * "/..")
+                except (InvalidSelectorException, NoSuchElementException):
+                    raise NoSuchElementException("No such element exists because the document boundaries have been exceeded.")
+    
     
     def find_element_by_text(self, text: str, exact_match: bool = False):
         """Finds and returns an element by its text value."""

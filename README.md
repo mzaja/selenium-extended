@@ -1,7 +1,7 @@
 
 # selenium-extended
  Extends the Selenium webdriver with additional functionality.
- - Finding elements by text
+ - Finding elements by text and ancestry
  - Key press interface
  - Time-delayed text typing
  - Screenshotting elements
@@ -21,6 +21,18 @@ A convenient way is provided to locate elements by the text they contain, bypass
 driver.find_element_by_text("GitHub")  # returns the first element whose text contains the phrase "GitHub"
 driver.find_elements_by_text("GitHub")  # returns all elements whose text contains the phrase "GitHub"
 driver.find_elements_by_text("GitHub", exact_match = True)  # returns all elements whose text is precisely "GitHub"
+```
+### Find ancestor
+Returns the n-th ancestor of the current element. The ancestor's generation is chosen using the **level** parameter. 
+```python
+elem = driver.find_element_by_id("input")  # locate a sample element
+elem.find_ancestor(level = 1)	# returns the parent (1 level up)
+elem.find_ancestor(level = 2)	# returns the grandpparent (2 levels up)
+```
+Both recursive and non-recursive search is supported. Recursive search is slower but always returns a result. Non-recursive search raises an exception when the ancestor's generation exceeds the docuument's boundaries.
+```python
+elem.find_ancestor(level = 999, recursive = True)	# (virtually always) returns the whole web page
+elem.find_ancestor(level = 999, recursive = False)	# raises NoSuchElementException
 ```
 ### Typing and pressing keys
 **Driver.press** sub-class emulates key presses without the need to use clunky **ActionChains**. Keys are pressed on a browser level e.g. not directed to any particular element. To send keys to a particular web element, invoke the equivalent **WebElement.press** methods. All keys from `selenium.webdriver.common.keys.Keys` are available.
