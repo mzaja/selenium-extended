@@ -23,7 +23,7 @@ driver.find_elements_by_text("GitHub")  # returns all elements whose text contai
 driver.find_elements_by_text("GitHub", exact_match = True)  # returns all elements whose text is precisely "GitHub"
 ```
 ### Find ancestor
-Returns the n-th ancestor of the current element. The ancestor's generation is chosen using the **level** parameter. 
+WebElements can return their n-th ancestor. The ancestor's generation is selected using the **level** parameter. 
 ```python
 elem = driver.find_element_by_id("input")  # locate a sample element
 elem.find_ancestor(level = 1)	# returns the parent (1 level up)
