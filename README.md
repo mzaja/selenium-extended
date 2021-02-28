@@ -1,4 +1,4 @@
-![test status](https://github.com/mzaja/selenium-extended/actions/workflows/ci.yml/badge.svg)
+[![test](https://github.com/mzaja/selenium-extended/actions/workflows/test.yml/badge.svg)](https://github.com/mzaja/selenium-extended/actions/workflows/test.yml)
 
 
 # selenium-extended
