@@ -36,13 +36,15 @@ jobs:
         sudo apt-get install -yqq unzip
         wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
         sudo unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+    - name: Install xvfb
+      run: |
+        sudo apt-get install -y xvfb
     - name: Install requirements
       run: |
         pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Install xvfb
-      run: |
-        sudo apt-get install -y xvfb
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v1.1.2
     - name: Run tests
       run: |
         xvfb-run --auto-servernum coverage run --source==selex -m unittest discover
