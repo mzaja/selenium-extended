@@ -21,22 +21,22 @@ def compare_images(img1: str, img2: str):
         obj1.close()
         obj2.close()
 
-test_image = r"tests\resources\image1.png"
-saved_image = r"tests\resources\saved_image.png"
+test_image = os.path.join(os.getcwd(), "tests", "resources", "image1.png")
+saved_image = os.path.join(os.getcwd(), "tests", "resources", "saved_image.png")
 
 class ElemSaveAsPngTest(BaseTestCase):
-    
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.image_elem = cls.driver.find_element_by_css_selector("img")     # find image in DOM
-    
+
     def setUp(self):
         remove_image(saved_image)
-        
+
     def tearDown(self):
         remove_image(saved_image)
-           
+
     def test_save_as_png(self):
         self.image_elem.save_as_png(saved_image)
         self.assertTrue(compare_images(saved_image, test_image))
@@ -48,4 +48,3 @@ class ElemSaveAsPngTest(BaseTestCase):
 
 if __name__ == "__main__":
     unittest.main(exit=False)
-    
