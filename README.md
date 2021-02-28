@@ -1,4 +1,4 @@
-[![test](https://github.com/mzaja/selenium-extended/actions/workflows/test.yml/badge.svg)](https://github.com/mzaja/selenium-extended/actions/workflows/test.yml)	[![Coverage Status](https://coveralls.io/repos/github/mzaja/selenium-extended/badge.svg?branch=main)](https://coveralls.io/github/mzaja/selenium-extended?branch=main)
+[![test](https://github.com/mzaja/selenium-extended/actions/workflows/test.yml/badge.svg)](https://github.com/mzaja/selenium-extended/actions/workflows/test.yml)	[![Coverage Status](https://coveralls.io/repos/github/mzaja/selenium-extended/badge.svg?branch=main&service=github)](https://coveralls.io/github/mzaja/selenium-extended?branch=main)
 
 # selenium-extended
  Extends the Selenium webdriver with additional functionality.
