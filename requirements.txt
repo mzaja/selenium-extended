@@ -3,4 +3,4 @@ selenium
 # tests only
 pillow      
 coveralls
-PyYAML
+pyYAML
