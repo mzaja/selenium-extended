@@ -12,8 +12,10 @@ def test_website_path():
     """"Returns the full path to the test website: Making the testing machine-invariant."""
     try:
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), test_website)
+        print("Uses __file__ dir")
     except NameError:   # if __file__ is not defined
         path = os.path.join(os.getcwd(), "tests", test_website)     # assumes cwd is the selenium-extended repository
+        print("Uses cwd dir")
     print(path)
     return path
     
