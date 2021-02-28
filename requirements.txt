@@ -1,2 +1,5 @@
 selenium
-pillow      # tests only
+
+# tests only
+pillow      
+coveralls
