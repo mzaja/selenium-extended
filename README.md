@@ -1,3 +1,5 @@
+![test status](https://github.com/mzaja/selenium-extended/actions/workflows/ci.yml/badge.svg)
+
 
 # selenium-extended
  Extends the Selenium webdriver with additional functionality.
