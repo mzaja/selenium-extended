@@ -46,6 +46,7 @@ jobs:
     - name: Run tests
       run: |
         xvfb-run --auto-servernum coverage run --source=selex -m unittest discover
-        coveralls
+    - name: Coveralls
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: coveralls --service=github
