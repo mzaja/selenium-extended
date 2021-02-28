@@ -1,21 +1,27 @@
 import os
 import unittest
 from collections import namedtuple
-from pathlib import Path
 from time import sleep
 
 from selex import Driver
 
-# driver, _ = test_setup()
-
 TestObjects = namedtuple("SelexObjects", "driver elem")
+test_website = os.path.join("resources", "test_website.html")
 
+def test_website_path():
+    """"Returns the full path to the test website: Making the testing machine-invariant."""
+    try:
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), test_website)
+    except NameError:   # if __file__ is not defined
+        path = os.path.join(os.getcwd(), "tests", test_website)     # assumes cwd is the selenium-extended repository
+    return path
+    
 def test_setup():
     """
     Initializes the webdriver, opens the test website and returns a (driver, webelement) tuple for test purposes.
     """
     driver = Driver("Chrome")
-    driver.get((Path.cwd() / "tests" / "resources" / "test_website.html").as_uri())
+    driver.get(test_website_path())
     webelem = driver.find_element_by_css_selector("html")  # store the whole webpage as an element
     return TestObjects(driver, webelem)
 

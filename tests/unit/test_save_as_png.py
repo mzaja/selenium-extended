@@ -21,8 +21,8 @@ def compare_images(img1: str, img2: str):
         obj1.close()
         obj2.close()
 
-test_image = os.path.join(os.getcwd(), "tests", "resources", "image1.png")
-saved_image = os.path.join(os.getcwd(), "tests", "resources", "saved_image.png")
+test_image = os.path.join("tests", "resources", "image1.png")
+saved_image = os.path.join("tests", "resources", "saved_image.png")
 
 class ElemSaveAsPngTest(BaseTestCase):
 
