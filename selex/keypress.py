@@ -27,9 +27,7 @@ class DriverKeyPress(KeyPress):
             
     def _press_key(self, key):
         """Base method for pressing keys. Used to derive convenience methods rather than be used directly."""
-        action = ActionChains(self._driver)
-        action.send_keys(key)
-        action.perform()
+        ActionChains(self._driver).send_keys(key).perform()
 
 
 class ElemKeyPress(KeyPress):

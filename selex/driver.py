@@ -29,7 +29,7 @@ class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
     def __init__(self, browser: str, **kwargs):
         browser = browser.capitalize()
         if browser not in SUPPORTED_BROWSERS:
-            raise TypeError(f"Browser must be one of: {SUPPORTED_BROWSERS}")
+            raise ValueError(f"Browser must be one of: {SUPPORTED_BROWSERS}")
         else:
             getattr(webdriver, browser).__init__(self, **kwargs)
         
