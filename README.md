@@ -1,5 +1,7 @@
 [![test](https://github.com/mzaja/selenium-extended/actions/workflows/test.yml/badge.svg)](https://github.com/mzaja/selenium-extended/actions/workflows/test.yml)	[![Coverage Status](https://coveralls.io/repos/github/mzaja/selenium-extended/badge.svg?branch=main&service=github)](https://coveralls.io/github/mzaja/selenium-extended?branch=main)	![Requires.io](https://img.shields.io/requires/github/mzaja/selenium-extended)
 
+![python](https://img.shields.io/badge/python-3.6%2C%203.7%2C%203.8%2C%203.9-orange)
+
 # selenium-extended
  Extends the Selenium webdriver with additional functionality.
  - Finding elements by text and ancestry
