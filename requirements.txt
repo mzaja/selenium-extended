@@ -1,6 +1,7 @@
 selenium
 
 # tests only
-pillow      
+pillow 
+coverage
 coveralls
 pyYAML
