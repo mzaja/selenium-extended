@@ -24,6 +24,7 @@ class DriverInit(unittest.TestCase):
         self.assertEqual(len(args), 3)
         self.assertEqual(args[0], f'--user-data-dir={USER_DATA_PATH}')
         self.assertEqual(args[1], f'--profile-directory=Default')
+        self.assertEqual(args[2], '--disable-blink-features=AutomationControlled')
 
 
 if __name__ == "__main__":
