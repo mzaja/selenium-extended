@@ -1,12 +1,19 @@
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import SessionNotCreatedException
 
 from .keypress import DriverKeyPress
+from .updater import update_chromedriver
 from .utils import find_elements_by_text, random_wait
 from .webelement import WebElement
 
 
-SUPPORTED_BROWSERS = ['Chrome', 'Firefox', 'Ie', 'Edge']
+CHROME = "Chrome"
+FIREFOX = "Firefox"
+IE = "Ie"
+EDGE = "Edge"
+SUPPORTED_BROWSERS = [CHROME, FIREFOX, IE, EDGE]
+
 
 class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
     """
@@ -31,7 +38,12 @@ class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
         if browser not in SUPPORTED_BROWSERS:
             raise ValueError(f"Browser must be one of: {SUPPORTED_BROWSERS}")
         else:
-            getattr(webdriver, browser).__init__(self, **kwargs)
+            try:
+                getattr(webdriver, browser).__init__(self, **kwargs)
+            except SessionNotCreatedException:
+                if browser == CHROME:
+                    update_chromedriver(force=False)
+                    getattr(webdriver, browser).__init__(self, **kwargs)
         
         self._web_element_cls = WebElement      # return custom WebElement class using this webdriver
         
