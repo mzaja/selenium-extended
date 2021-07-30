@@ -1,18 +1,13 @@
+from selex.updater.firefox import update_geckodriver
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import SessionNotCreatedException
 
+from .const import SUPPORTED_BROWSERS, CHROME, FIREFOX, IE, EDGE
 from .keypress import DriverKeyPress
 from .updater import update_chromedriver
 from .utils import find_elements_by_text, random_wait
 from .webelement import WebElement
-
-
-CHROME = "Chrome"
-FIREFOX = "Firefox"
-IE = "Ie"
-EDGE = "Edge"
-SUPPORTED_BROWSERS = [CHROME, FIREFOX, IE, EDGE]
 
 
 class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
@@ -43,9 +38,11 @@ class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
             except SessionNotCreatedException as caught_exc:
                 if browser == CHROME:
                     update_chromedriver(force=False)
-                    getattr(webdriver, browser).__init__(self, **kwargs)
+                if browser == FIREFOX:
+                    update_geckodriver(force=False)
                 else:
                     raise caught_exc
+                getattr(webdriver, browser).__init__(self, **kwargs)    # reached only if the exception is not re-raised
         
         self._web_element_cls = WebElement      # return custom WebElement class using this webdriver
         
