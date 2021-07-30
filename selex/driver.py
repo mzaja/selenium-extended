@@ -38,7 +38,7 @@ class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
             except SessionNotCreatedException as caught_exc:
                 if browser == CHROME:
                     update_chromedriver(force=False)
-                if browser == FIREFOX:
+                elif browser == FIREFOX:
                     update_geckodriver(force=False)
                 else:
                     raise caught_exc
