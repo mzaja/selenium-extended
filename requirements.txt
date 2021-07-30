@@ -1,4 +1,5 @@
 selenium
+bs4
 
 # tests only
 pillow 
