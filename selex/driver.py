@@ -40,10 +40,12 @@ class Driver(webdriver.Chrome, webdriver.Firefox, webdriver.Ie, webdriver.Edge):
         else:
             try:
                 getattr(webdriver, browser).__init__(self, **kwargs)
-            except SessionNotCreatedException:
+            except SessionNotCreatedException as caught_exc:
                 if browser == CHROME:
                     update_chromedriver(force=False)
                     getattr(webdriver, browser).__init__(self, **kwargs)
+                else:
+                    raise caught_exc
         
         self._web_element_cls = WebElement      # return custom WebElement class using this webdriver
         
