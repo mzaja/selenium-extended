@@ -1,8 +1,8 @@
 selenium
+bs4
 
 # tests only
 pillow 
 coverage
 coveralls
 pyYAML
-bs4
