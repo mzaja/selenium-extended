@@ -5,7 +5,7 @@ import subprocess
 from bs4 import BeautifulSoup
 
 from selex.const import CMD_OUT_DECODING
-from .generic import locate_generic_driver, zip_download_and_extract
+from .generic import locate_generic_driver, newer_version_available, zip_download_and_extract
 
 
 GECKODRIVER = "GeckoDriver"
@@ -64,7 +64,7 @@ def update_geckodriver(force: bool = False):
     latest_version = get_latest_geckodriver_version()
     print(f"Current {GECKODRIVER} version is {current_version}.")
     print(f"Latest {GECKODRIVER} version is {latest_version}.")
-    if ((latest_version > current_version) or (True == force)):
+    if (newer_version_available(current_version, latest_version) or (True == force)):
         print(f"Updating {GECKODRIVER}...")
         firefox_bits = get_firefox_bit_version_win()
         download_link = f"https://github.com/mozilla/geckodriver/releases/download/v{latest_version}/geckodriver-v{latest_version}-win{firefox_bits}.zip"

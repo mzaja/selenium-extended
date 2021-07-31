@@ -33,6 +33,14 @@ def locate_generic_driver(driver_exe: str):
         return retval
 
 
+def newer_version_available(current_version_local: str, latest_version_online: str):
+    """
+    Compares two sequences of dot-separated integer strings representing software version numbers. 
+    Returns True if the second sequence is greater than the first one.
+    """
+    return list(map(int, latest_version_online.split('.'))) > list(map(int, current_version_local.split('.')))
+
+
 def zip_download_and_extract(download_link: str, output_dir: str = None, files: list = None):
     """
     Downloads the Zip file straight to RAM and extracts the nominated files to the output folder.
