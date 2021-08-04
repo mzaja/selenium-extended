@@ -1,7 +1,8 @@
-import pathlib
 import re
 import requests
 import subprocess
+from pathlib import Path
+
 from bs4 import BeautifulSoup
 
 from selex.const import CMD_OUT_DECODING
@@ -21,7 +22,7 @@ def get_firefox_bit_version_win():
     If both version are installed, 64 is returned.
     """
     for version, suffix in zip([64, 32], ['', ' (x86)']):
-        if pathlib.Path(fr"C:\Program Files{suffix}\Mozilla Firefox").exists():
+        if Path(fr"C:\Program Files{suffix}\Mozilla Firefox").exists():
             return version
     
 
@@ -44,7 +45,7 @@ def get_geckodriver_version_win(geckodriver_path: str = None) -> str:
 
 def get_latest_geckodriver_version():
     """
-    Returns the latest available 
+    Returns the latest available geckodriver release version from GitHub.
     """
     href_regex = re.compile("/mozilla/geckodriver/releases/tag/")
     return BeautifulSoup(requests.get(GECKODRIVER_DOWNLOADS_URL).text, features="html.parser").find("a", href=href_regex).text

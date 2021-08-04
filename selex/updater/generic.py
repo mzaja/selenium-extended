@@ -1,7 +1,7 @@
-import pathlib
 import requests
 import sys
 from io import BytesIO
+from pathlib import Path
 from zipfile import ZipFile
 
 from ..exceptions import WebdriverNotFoundError
@@ -12,7 +12,7 @@ def locate_on_syspath(pattern: str):
     Locates the first available instance matching the pattern on PATH.
     """
     for path in sys.path:
-        search_results = list(pathlib.Path(path).glob(pattern))
+        search_results = list(Path(path).glob(pattern))
         if len(search_results) > 0:  # if file found
             retval = search_results[0]
             if len(search_results) > 1:  # never activated when searching for the exact filename 
