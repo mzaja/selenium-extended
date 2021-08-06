@@ -26,12 +26,12 @@ class GetChromeVersionTest(unittest.TestCase):
         chrome_path = "2012/metalfest/chrome.exe"
         mock_check_output.return_value = self.SHELL_RAW_OUTPUT
         self.assertEqual(get_chrome_version_win("2012/metalfest/chrome.exe"), self.VERSION)
-        self.assertIn(chrome_path, mock_check_output.call_args.args[0])  # assert path in query
+        self.assertIn(chrome_path, mock_check_output.call_args[0][0])  # assert path in query
 
     def test_path_not_provided(self, mock_check_output):
         mock_check_output.return_value = self.SHELL_RAW_OUTPUT
         self.assertEqual(get_chrome_version_win(), self.VERSION)
-        self.assertIn(CHROME_PATH_WIN, mock_check_output.call_args.args[0])  # assert path in query
+        self.assertIn(CHROME_PATH_WIN, mock_check_output.call_args[0][0])  # assert path in query
     
     def test_invalid_response(self, mock_check_output): 
         """Normally this raises a subprocess error, but we can also raise one."""
