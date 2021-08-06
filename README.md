@@ -86,7 +86,7 @@ class NewDriver(Driver):
 new_driver = NewDriver("Chrome")
 new_driver.search_for_something()	# waits for 3 seconds before timing out
 ```
-When a custom class has the Selex **Driver** as an attribute (rather than it being a parent class), a custom **@wait(time)** decorator can be manufactures using the **wait_factory** function.
+When a custom class has the Selex **Driver** as an attribute (rather than it being a parent class), a custom **@wait(time)** decorator can be manufactured using the **wait_factory** function.
 ```python
 class BankRobbery():
 	def __init__(self)
