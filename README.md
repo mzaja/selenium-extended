@@ -60,7 +60,7 @@ Save web elements as png images with zero effort.
 ```python
 elem.save_as_png("Pretty element.png")
 ```
-### Automatic webdriver update
+### Automatic webdriver updates
 You know the feeling very well... Your Python script fails because Chrome has automatically updated to a new major release and left the incompatible ChromeDriver in the dust. Now you have to manually download the new ChromeDriver release and replace the existing chromedriver.exe located somewhere deep on the sys path. Repeat once a month... Not with Selex though! Selex **Driver** will automatically download and replace the existing chromedriver/geckodriver.exe if it detects an update is required and restart itself.
 
 Webdrivers can also be updated manually like so:
@@ -81,18 +81,18 @@ The **@wait(time)** decorator can be used to force the user-specified **implicit
 class NewDriver(Driver):
 	# __init__ goes here
 	@wait(3)
-	def search_for_something()
-	# do some (soul) searching
+	def search_for_something():
+		# do some (soul) searching
 new_driver = NewDriver("Chrome")
 new_driver.search_for_something()	# waits for 3 seconds before timing out
 ```
 When a custom class has the Selex **Driver** as an attribute (rather than it being a parent class), a custom **@wait(time)** decorator can be manufactured using the **wait_factory** function.
 ```python
 class BankRobbery():
-	def __init__(self)
+	def __init__(self):
 		self.hillary = Driver("Chrome")
 	@wait(10)
-	def be_useless()
+	def be_useless():
 		# die and make Tommy do everything
 
 wait = wait_factory("hillary")  # tells the wait decorator to find the Driver instance at self.hillary
