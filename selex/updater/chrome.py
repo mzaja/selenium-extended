@@ -2,6 +2,7 @@ import re
 import requests
 import subprocess
 from collections import namedtuple
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 
@@ -22,12 +23,12 @@ CHROMEDRIVER = "ChromeDriver"
 chrome_version_regex = re.compile(r"Version=([\d\.]+)")
 chromedriver_version_regex = re.compile(fr"{CHROMEDRIVER} ([\d\.]+)")
 
-ChromeVersion = namedtuple("ChromeVersion", ["major", "minor", "build", "sub"])
+ChromeVersion = namedtuple("ChromeVersion", ["major", "minor", "build", "sub"], defaults = 4*["0"])
 
 
 def get_chrome_version_win(chrome_exe_path: str = None) -> int:
     """
-    Retrieves the major Chrome version on the Windows platform. 
+    Retrieves the Chrome version on the Windows platform. 
     """
     if chrome_exe_path == None: 
         chrome_exe_path = CHROME_PATH_WIN
@@ -39,7 +40,7 @@ def get_chrome_version_win(chrome_exe_path: str = None) -> int:
         raise BrowserVersionUndeterminedError(CHROME, chrome_exe_path)
 
 
-def locate_chromedriver():
+def locate_chromedriver()-> Path:
     """
     Locates the first available chromedriver.exe on system path.
     """
@@ -48,7 +49,7 @@ def locate_chromedriver():
 
 def get_chromedriver_version_win(chromedriver_path: str = None) -> int:
     """
-    Retrieves the major ChromeDriver version on the Windows platform.
+    Retrieves the ChromeDriver version on the Windows platform.
     """
     if chromedriver_path == None:
         chromedriver_path = locate_chromedriver()
@@ -90,21 +91,28 @@ def parse_chrome_version(version_string: str):
 
 def update_chromedriver(force: bool = False):
     """
-    Updates ChromeDriver to match the current Chrome version.
+    Updates ChromeDriver matching the Chrome's major release version. 
+    If the major versions already match, it looks for ChromeDriver updates for that particular major release.
     
     Parameters:
         force (bool): If True, ChromeDriver will be updated even if the major version number
                       matches the one from Chrome. If False, ChromeDriver is updated only on
                       the major version number mismatch.
     """
-    browser_version = get_chrome_version_win()
+    browser_version_full = get_chrome_version_win()
+    browser_version_major = parse_chrome_version(browser_version_full).major
+    
     driver_path = locate_chromedriver()
     driver_version = get_chromedriver_version_win(driver_path)
-    latest_driver_version = get_latest_chromedriver_version(parse_chrome_version(browser_version).major)  # only consider drivers suitable for the current browser
-    print(f"{CHROME} version is {browser_version}.")
+    latest_driver_version = get_latest_chromedriver_version(browser_version_major)  # only consider drivers suitable for the current browser
+    
+    print(f"{CHROME} version is {browser_version_full}.")
     print(f"{CHROMEDRIVER} version is {driver_version}.")
     print(f"{CHROMEDRIVER} version {latest_driver_version} is available.")
-    if (newer_version_available(driver_version, latest_driver_version) or (True == force)):
+    
+    if  (newer_version_available(driver_version, latest_driver_version) or
+        (browser_version_major != parse_chrome_version(latest_driver_version).major) or  # if a downgrade is required (old browser)
+        (True == force)):
         print(f"Updating {CHROMEDRIVER}...")
         download_link = f"{CHROMEDRIVER_API_HOME_URL}/{latest_driver_version}/{CHROMEDRIVER_ZIP_WIN32}"
         zip_download_and_extract(download_link, driver_path.parent, [CHROMEDRIVER_EXE])

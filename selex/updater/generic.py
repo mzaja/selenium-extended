@@ -7,14 +7,14 @@ from zipfile import ZipFile
 from ..exceptions import WebdriverNotFoundError
 
 
-def locate_on_syspath(pattern: str):
+def locate_on_syspath(pattern: str) -> Path:
     """
     Locates the first available instance matching the pattern on PATH.
     """
     for path in sys.path:
         search_results = list(Path(path).glob(pattern))
         if len(search_results) > 0:  # if file found
-            retval = search_results[0]
+            retval = Path(search_results[0])
             if len(search_results) > 1:  # never activated when searching for the exact filename 
                 print(f"More than one instance of {pattern} found on PATH. Returning '{retval}'.")
             return retval

@@ -26,7 +26,7 @@ def get_firefox_bit_version_win():
             return version
     
 
-def locate_geckodriver():
+def locate_geckodriver() -> Path:
     """
     Locates the first available geckodriver.exe on system path.
     """
@@ -63,8 +63,10 @@ def update_geckodriver(force: bool = False):
     geckodriver_path = locate_geckodriver()
     current_version = get_geckodriver_version_win(geckodriver_path)
     latest_version = get_latest_geckodriver_version()
+    
     print(f"Current {GECKODRIVER} version is {current_version}.")
     print(f"Latest {GECKODRIVER} version is {latest_version}.")
+    
     if (newer_version_available(current_version, latest_version) or (True == force)):
         print(f"Updating {GECKODRIVER}...")
         firefox_bits = get_firefox_bit_version_win()
