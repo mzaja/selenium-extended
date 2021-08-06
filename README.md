@@ -65,7 +65,7 @@ You know the feeling very well... Your Python script fails because Chrome has au
 
 Webdrivers can also be updated manually like so:
 ```python
-from selex.updater update_chromedriver, update_geckodriver
+from selex.updater import update_chromedriver, update_geckodriver
 update_chromedriver()
 update_geckodriver()
 ```
