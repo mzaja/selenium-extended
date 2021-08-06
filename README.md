@@ -8,6 +8,7 @@
  - Key press interface
  - Time-delayed text typing
  - Screenshotting elements
+ - Automatic webdriver updates
  - Implicit wait getters, setters and decorators
  - Chrome profile selector
 
@@ -59,6 +60,16 @@ Save web elements as png images with zero effort.
 ```python
 elem.save_as_png("Pretty element.png")
 ```
+### Automatic webdriver update
+You know the feeling very well... Your Python script fails because Chrome has automatically updated to a new major release and left the incompatible ChromeDriver in the dust. Now you have to manually download the new ChromeDriver release and replace the existing chromedriver.exe located somewhere deep on the sys path. Repeat once a month... Not with Selex though! Selex **Driver** will automatically download and replace the existing chromedriver/geckodriver.exe if it detects an update is required and restart itself.
+
+Webdrivers can also be updated manually like so:
+```python
+from selex.updater update_chromedriver, update_geckodriver
+update_chromedriver()
+update_geckodriver()
+```
+
 ### Implicit wait
 The **implicit_wait** property simplifies interacting with the webdriver's **implicitly_wait()** mechanic.
 ```python
