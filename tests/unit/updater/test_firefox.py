@@ -145,7 +145,7 @@ class UpdateGeckoDriverTest(unittest.TestCase):
                               update_triggered = True)
     
 
-    def test_newer_does_not_exist_force(self):
+    def test_newer_does_not_exist(self):
         """Tests the case when a newer version does not exist."""
         self.base_test_runner(force_update = False, 
                               latest_driver_version = self.CURRENT_VERSION,

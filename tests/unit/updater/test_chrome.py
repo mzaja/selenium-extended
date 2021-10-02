@@ -9,7 +9,8 @@ from selex.updater.chrome import (get_chrome_version_win,
                                   locate_chromedriver,
                                   parse_chrome_version,
                                   update_chromedriver,
-                                  CHROME_PATH_WIN)
+                                  CHROME_PATH_WIN_32,
+                                  CHROME_PATH_WIN_64)
 
 from selex.exceptions import BrowserVersionUndeterminedError, NoSuchChromeDriverError
 
@@ -22,17 +23,20 @@ class GetChromeVersionTest(unittest.TestCase):
     VERSION = "92.0.4515.131"
     SHELL_RAW_OUTPUT = b'\r\r\n\r\r\nVersion=92.0.4515.131\r\r\n\r\r\n\r\r\n\r\r\n'
     
-    def test_path_provided(self, mock_check_output):
+    def test_custom_path_provided(self, mock_check_output):
         chrome_path = "2012/metalfest/chrome.exe"
-        mock_check_output.return_value = self.SHELL_RAW_OUTPUT
-        self.assertEqual(get_chrome_version_win("2012/metalfest/chrome.exe"), self.VERSION)
-        self.assertIn(chrome_path, mock_check_output.call_args[0][0])  # assert path in query
+        mock_check_output.return_value = self.SHELL_RAW_OUTPUT  # find match on first attempt
+        self.assertEqual(get_chrome_version_win(chrome_path), self.VERSION)
+        self.assertIn(chrome_path, mock_check_output.call_args.args[0])  # assert path in query
 
-    def test_path_not_provided(self, mock_check_output):
-        mock_check_output.return_value = self.SHELL_RAW_OUTPUT
+    def test_custom_path_not_provided(self, mock_check_output):
+        mock_check_output.side_effect = [b"", self.SHELL_RAW_OUTPUT] # queue return values
         self.assertEqual(get_chrome_version_win(), self.VERSION)
-        self.assertIn(CHROME_PATH_WIN, mock_check_output.call_args[0][0])  # assert path in query
-    
+        print(mock_check_output.call_args)
+        print(mock_check_output.call_args_list)
+        self.assertIn(CHROME_PATH_WIN_64, mock_check_output.call_args_list[0].args[0])  # assert path in query (1st attempt)
+        self.assertIn(CHROME_PATH_WIN_32, mock_check_output.call_args_list[1].args[0])  # assert path in query (2nd attempt)
+        
     def test_invalid_response(self, mock_check_output): 
         """Normally this raises a subprocess error, but we can also raise one."""
         mock_check_output.return_value = b"Some nonsense"
@@ -188,7 +192,7 @@ class UpdateChromeDriverTest(unittest.TestCase):
                               update_triggered = True)
     
 
-    def test_newer_does_not_exist_force(self):
+    def test_newer_does_not_exist(self):
         """Tests the case when a newer version does not exist."""
         self.base_test_runner(force_update = False, 
                               latest_driver_version = self.CURRENT_DRIVER_VERSION,

@@ -11,7 +11,8 @@ from selex.exceptions import BrowserVersionUndeterminedError, NoSuchChromeDriver
 from .generic import locate_generic_driver, newer_version_available, zip_download_and_extract
 
 
-CHROME_PATH_WIN = r"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+CHROME_PATH_WIN_32 = r"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+CHROME_PATH_WIN_64 = r"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
 CHROMEDRIVER_INDEX_URL = "https://chromedriver.storage.googleapis.com/index.html"  # unused 
 CHROMEDRIVER_LATEST_RELEASE = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE"
 CHROMEDRIVER_DOWNLOADS_URL = "https://chromedriver.chromium.org/downloads"
@@ -26,18 +27,24 @@ chromedriver_version_regex = re.compile(fr"{CHROMEDRIVER} ([\d\.]+)")
 ChromeVersion = namedtuple("ChromeVersion", ["major", "minor", "build", "sub"], defaults = 4*["0"])
 
 
-def get_chrome_version_win(chrome_exe_path: str = None) -> int:
+def get_chrome_version_win(chrome_exe_path: str = None) -> str:
     """
     Retrieves the Chrome version on the Windows platform. 
+    Checks the default installation folders of 32 and 64 bit versions.
+    A custom Chrome exe path can also be specified.
     """
-    if chrome_exe_path == None: 
-        chrome_exe_path = CHROME_PATH_WIN
-    query = "wmic datafile where name=\"" + chrome_exe_path + "\" get Version /value"   # problematic with f-strings
-    shell_out = subprocess.check_output(query, shell=True).decode(CMD_OUT_DECODING).strip()
+    chrome_paths = [CHROME_PATH_WIN_64, CHROME_PATH_WIN_32]
+    if chrome_exe_path is not None: 
+        chrome_paths.insert(0, chrome_exe_path) # prepend custom path to start
+    for path in chrome_paths:
+        query = "wmic datafile where name=\"" + path + "\" get Version /value"   # problematic with f-strings
+        shell_out = subprocess.check_output(query, shell=True).decode(CMD_OUT_DECODING).strip()
+        if shell_out != "": 
+            break
     try:
         return chrome_version_regex.search(shell_out).group(1)
     except AttributeError:
-        raise BrowserVersionUndeterminedError(CHROME, chrome_exe_path)
+        raise BrowserVersionUndeterminedError(CHROME, chrome_paths)
 
 
 def locate_chromedriver()-> Path:
@@ -51,7 +58,7 @@ def get_chromedriver_version_win(chromedriver_path: str = None) -> int:
     """
     Retrieves the ChromeDriver version on the Windows platform.
     """
-    if chromedriver_path == None:
+    if chromedriver_path is None:
         chromedriver_path = locate_chromedriver()
     shell_out = subprocess.check_output(f"{chromedriver_path} -v", shell=True).decode(CMD_OUT_DECODING).strip()
     return chromedriver_version_regex.search(shell_out).group(1)
