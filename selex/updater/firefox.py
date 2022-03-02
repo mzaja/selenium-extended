@@ -48,7 +48,8 @@ def get_latest_geckodriver_version():
     Returns the latest available geckodriver release version from GitHub.
     """
     href_regex = re.compile("/mozilla/geckodriver/releases/tag/")
-    return BeautifulSoup(requests.get(GECKODRIVER_DOWNLOADS_URL).text, features="html.parser").find("a", href=href_regex).text
+    link_text = BeautifulSoup(requests.get(GECKODRIVER_DOWNLOADS_URL).text, features="html.parser").find("a", href=href_regex).text
+    return link_text.strip().replace('v','')    # remove whitespace and preceeding 'v' character
 
 
 def update_geckodriver(force: bool = False):
