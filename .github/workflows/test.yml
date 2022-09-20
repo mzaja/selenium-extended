@@ -11,6 +11,9 @@ on:
     - main
     paths-ignore:
     - '**.md'
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '37 13 1 * *'
 
 jobs:
   test:
