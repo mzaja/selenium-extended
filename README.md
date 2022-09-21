@@ -15,8 +15,8 @@
 ## Example usage
 ### Initialization
 ```python
-from selex import Driver
-driver = Driver("Chrome")
+from selex import get_driver, BrowserType
+driver = get_driver(BrowserType.CHROME)
 driver.get("https://github.com/")
 ```
 ### Find element(s) by text
@@ -29,7 +29,7 @@ driver.find_elements_by_text("GitHub", exact_match = True)  # returns all elemen
 ### Find ancestor
 Web elements can return their n-th ancestor. The ancestor's generation is selected using the **level** parameter. 
 ```python
-elem = driver.find_element_by_id("input")  # locate a sample element
+elem = driver.find_element(By.ID, "input")  # locate a sample element
 elem.find_ancestor(level = 1)	# returns the parent (1 level up)
 elem.find_ancestor(level = 2)	# returns the grandparent (2 levels up)
 ```
@@ -43,7 +43,7 @@ elem.find_ancestor(level = 999, recursive = False)	# raises NoSuchElementExcepti
 ```python
 driver.press.ENTER()  # simulates the ENTER keypress
 driver.press.TAB()	 # simulates the TAB keypress
-elem = driver.find_element_by_id("form")  # locate a sample element
+elem = driver.find_element(By.ID, "form")  # locate a sample element
 elem.press.DELETE()	 # press DELETE with the element in focus
 ```
 Longer key press sequences can be emulated using the **type_in** method.
@@ -90,7 +90,7 @@ When a custom class has the Selex **Driver** as an attribute (rather than it bei
 ```python
 class BankRobbery():
 	def __init__(self):
-		self.hillary = Driver("Chrome")
+		self.hillary = get_driver(BrowserType.CHROME)
 	@wait(10)
 	def be_useless():
 		# die and make Tommy do everything
@@ -102,5 +102,5 @@ Starting Chrome with a custom user profile is made easier by the **chrome_option
 ```python
 from selex import chrome_options
 options = chrome_options(user_data_path = PATH, profile_name = "Tanner")  # PATH points to '...\Google\Chrome\User Data'
-driver = Driver("Chrome", options=options)  # starts Chromedriver using the custom profile
+driver = get_driver(BrowserType.CHROME, options=options)  # starts Chromedriver using the custom profile
 ```

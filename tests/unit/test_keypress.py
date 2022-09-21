@@ -2,6 +2,7 @@ import unittest
 
 from tests.setup import BaseTestCase
 
+from selex import By
 
 def test_numpad_nums(self, driver, focus_click: bool):
     """"
@@ -65,7 +66,7 @@ def test_arrows_bksp_del(self, driver, focus_click: bool):
 class KeypressTest(BaseTestCase):
     
     def setUp(self):
-        self.form_field = self.driver.find_element_by_id("form1")
+        self.form_field = self.driver.find_element(By.ID, "form1")
         self.form_field.clear()
     
     def get_field_text(self):

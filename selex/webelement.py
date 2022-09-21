@@ -3,6 +3,7 @@ import os
 from selenium.common.exceptions import NoSuchElementException, InvalidSelectorException
 from selenium.webdriver.remote.webelement import WebElement as BaseWebElement
 
+from .enums import By
 from .keypress import ElemKeyPress
 from .utils import find_elements_by_text, random_wait
 
@@ -45,13 +46,13 @@ class WebElement(BaseWebElement):
         if level > 0:
             if recursive == True:
                 try:
-                    parent = self.find_element_by_xpath("..")
+                    parent = self.find_element(By.XPATH, "..")
                     return parent.find_ancestor(level - 1, recursive=True)
                 except InvalidSelectorException:
                     return self
             else: # if recursive == False
                 try:
-                    return self.find_element_by_xpath(".." + (level-1) * "/..")
+                    return self.find_element(By.XPATH, ".." + (level-1) * "/..")
                 except (InvalidSelectorException, NoSuchElementException):
                     raise NoSuchElementException("No such element exists because the document boundaries have been exceeded.")
     

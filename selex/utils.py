@@ -3,6 +3,7 @@ import time
 
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 
+from selex.enums import By
 
 def chrome_options(user_data_path: str, profile_name: str = 'Default'):
     """Returns the webdriver Chrome options for the provided user data path and profile name."""
@@ -26,5 +27,5 @@ def find_elements_by_text(driver, return_one: bool, text: str, exact_match: bool
     contains_query = f"//*[contains(text(), '{text}')]"
     exact_query = f"//*[text()='{text}']"
     query = exact_query if exact_match == True else contains_query
-    method = driver.find_element_by_xpath if return_one == True else driver.find_elements_by_xpath
-    return method(query)
+    method = driver.find_element if return_one == True else driver.find_elements
+    return method(By.XPATH, query)

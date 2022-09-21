@@ -29,7 +29,7 @@ class ElemSaveAsPngTest(BaseTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.image_elem = cls.driver.find_element_by_css_selector("img")     # find image in DOM
+        cls.image_elem = cls.driver.find_element(By.CSS_SELECTOR, "img")     # find image in DOM
 
     def setUp(self):
         remove_image(saved_image)

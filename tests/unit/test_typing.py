@@ -11,7 +11,7 @@ tolerance = 0.2
 class TypingTest(BaseTestCase):
     
     def setUp(self):
-        self.form_field = self.driver.find_element_by_id("form1")
+        self.form_field = self.driver.find_element(By.ID, "form1")
         self.form_field.clear()
     
     def get_field_text(self):
@@ -67,7 +67,7 @@ class TypingTest(BaseTestCase):
         Tests that the text is typed on browser level, by sending keys to a non-input element.
         """
         test_phrase = "John"
-        self.driver.find_element_by_css_selector("h1").click()    # focus on a non-input element    
+        self.driver.find_element(By.CSS_SELECTOR, "h1").click()    # focus on a non-input element    
         self.driver.slow_type(test_phrase, max_delay = min_max_delay[1], min_delay = min_max_delay[0])
         self.assertEqual(self.get_field_text(), '')
       
@@ -87,7 +87,7 @@ class TypingTest(BaseTestCase):
         Tests that the text is typed on browser level, by sending keys to a non-input element.
         """
         test_phrase = "John"
-        self.driver.find_element_by_css_selector("h1").click()    # focus on a non-input element    
+        self.driver.find_element(By.CSS_SELECTOR, "h1").click()    # focus on a non-input element    
         self.driver.type_in(test_phrase)
         self.assertEqual(self.get_field_text(), '')
 

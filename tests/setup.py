@@ -6,7 +6,7 @@ from collections import namedtuple
 from pathlib import Path
 from time import sleep
 
-from selex import Driver
+from selex import get_driver, BrowserType, By
 
 TestObjects = namedtuple("SelexObjects", "driver elem")
 test_website = os.path.join("resources", "test_website.html")
@@ -27,9 +27,9 @@ def test_setup():
     """
     Initializes the webdriver, opens the test website and returns a (driver, webelement) tuple for test purposes.
     """
-    driver = Driver("Chrome")
+    driver = get_driver(BrowserType.CHROME)
     driver.get(test_website_path())
-    webelem = driver.find_element_by_css_selector("html")  # store the whole webpage as an element
+    webelem = driver.find_element(By.CSS_SELECTOR, "html")  # store the whole webpage as an element
     return TestObjects(driver, webelem)
 
 class BaseTestCase(unittest.TestCase):

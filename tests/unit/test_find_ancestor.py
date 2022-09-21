@@ -25,7 +25,7 @@ class ElemFindAncestorTest(BaseTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.elem = cls.driver.find_element_by_css_selector("label")
+        cls.elem = cls.driver.find_element(By.CSS_SELECTOR, "label")
     
     def test_type_error(self):
         for arg in [2.3, 'str', False]:

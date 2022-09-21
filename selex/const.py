@@ -2,6 +2,5 @@ CHROME = "Chrome"
 FIREFOX = "Firefox"
 IE = "Ie"
 EDGE = "Edge"
-SUPPORTED_BROWSERS = [CHROME, FIREFOX, IE, EDGE]
 
 CMD_OUT_DECODING = "utf-8"
