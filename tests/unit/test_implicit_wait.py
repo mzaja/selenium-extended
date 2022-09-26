@@ -36,13 +36,13 @@ class DriverImplicitWaitFactoryTest(BaseTestCase):
 class DriverImplicitWaitTest(unittest.TestCase):
     """Tests the standalone @wait decorator in a child class of Driver."""
     
-    class TestDriver(type(get_driver(BrowserType.CHROME))):
+    class TestDriver(type(get_driver(Browser.CHROME))):
         @wait(TEST_WAIT)    
         def search_for_nothing(self):
             self.find_element(By.ID, "Nonexistent id")
     
     def test_decorator(self):
-        driver = self.TestDriver(BrowserType.CHROME)
+        driver = self.TestDriver(Browser.CHROME)
         t1 = time.time()
         try:
             driver.search_for_nothing()

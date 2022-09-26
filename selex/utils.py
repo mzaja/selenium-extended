@@ -17,15 +17,22 @@ def chrome_options(user_data_path: str, profile_name: str = 'Default'):
 def random_wait(max_wait: float, min_wait: float = 0):
     """Waits for a random time between min_wait and max_wait."""
     time.sleep(random.uniform(min_wait, max_wait))
-            
 
-def find_elements_by_text(driver, return_one: bool, text: str, exact_match: bool):
+
+def make_text_search_query(text: str, exact_match: bool):
+    """Generates the xpath search query that finds the specified text in the webpage."""
+    return f"//*[text()='{text}']" if exact_match is True else f"//*[contains(text(), '{text}')]"
+
+def find_element_by_text(driver, text: str, exact_match: bool):
     """
     Finds element(s) by their text. 
     A base function for Driver and Element class methods, not to be invoked directly.
     """
-    contains_query = f"//*[contains(text(), '{text}')]"
-    exact_query = f"//*[text()='{text}']"
-    query = exact_query if exact_match == True else contains_query
-    method = driver.find_element if return_one == True else driver.find_elements
-    return method(By.XPATH, query)
+    return driver.find_element(By.XPATH, make_text_search_query(text, exact_match))
+
+def find_elements_by_text(driver, text: str, exact_match: bool):
+    """
+    Finds element(s) by their text. 
+    A base function for Driver and Element class methods, not to be invoked directly.
+    """
+    return driver.find_elements(By.XPATH, make_text_search_query(text, exact_match))

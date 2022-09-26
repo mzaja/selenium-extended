@@ -1,11 +1,12 @@
 import os
+from typing import List
 
 from selenium.common.exceptions import NoSuchElementException, InvalidSelectorException
 from selenium.webdriver.remote.webelement import WebElement as BaseWebElement
 
 from .enums import By
 from .keypress import ElemKeyPress
-from .utils import find_elements_by_text, random_wait
+from .utils import find_element_by_text, find_elements_by_text, random_wait
 
 
 class WebElement(BaseWebElement):
@@ -57,13 +58,23 @@ class WebElement(BaseWebElement):
                     raise NoSuchElementException("No such element exists because the document boundaries have been exceeded.")
     
     
-    def find_element_by_text(self, text: str, exact_match: bool = False):
+    def find_element(self, by: By.ID, value: str = None) -> "WebElement":
         """Finds and returns an element by its text value."""
-        return find_elements_by_text(self._parent, True, text, exact_match)
-    
-    def find_elements_by_text(self, text: str, exact_match: bool = False):
+        if by is By.TEXT:
+            return find_element_by_text(self._parent, value, True)
+        elif by is By.PARTIAL_TEXT:
+            return find_element_by_text(self._parent, value, False)
+        else:
+            return super().find_element(by, value)
+        
+    def find_elements(self, by: By.ID, value: str = None) -> List["WebElement"]:
         """Finds and returns elements by their text value."""
-        return find_elements_by_text(self._parent, False, text, exact_match)
+        if by is By.TEXT:
+            return find_elements_by_text(self._parent, value, True)
+        elif by is By.PARTIAL_TEXT:
+            return find_elements_by_text(self._parent, value, False)
+        else:
+            return super().find_elements(by, value)
 
     def save_as_png(self, output_file: str):
         """Saves the web element as a PNG image. 'output_file' does not need to include the .png extension."""     

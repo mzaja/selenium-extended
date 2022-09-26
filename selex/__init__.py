@@ -4,4 +4,4 @@ from selenium.common.exceptions import NoSuchElementException, StaleElementRefer
 from .driver import get_driver
 from .utils import chrome_options
 from .wait import wait, wait_factory
-from .enums import BrowserType, By
+from .enums import Browser, By

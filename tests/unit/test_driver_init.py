@@ -3,12 +3,12 @@ from unittest.mock import patch, ANY, call
 
 from selenium.common.exceptions import SessionNotCreatedException
 
-from selex import get_driver, chrome_options, BrowserType
+from selex import get_driver, chrome_options, Browser
 
 USER_DATA_PATH = "dummy/user/data/path"
 USER_PROFILE = "Profile 99"
 KWARGS = {'kw1': 3, 'kw2': 'Whatever'}
-SUPPORTED_BROWSERS = list(BrowserType)
+SUPPORTED_BROWSERS = list(Browser)
 
 class DriverInitTest(unittest.TestCase):
     """
@@ -29,7 +29,7 @@ class DriverInitTest(unittest.TestCase):
     @patch("selenium.webdriver.Chrome.__init__")
     def test_chrome_driver_mismatch(self, mock_browser, mock_updater):
         mock_browser.side_effect = [SessionNotCreatedException, None]
-        get_driver(BrowserType.CHROME, **KWARGS)
+        get_driver(Browser.CHROME, **KWARGS)
         mock_browser.assert_has_calls([call(ANY, **KWARGS)] * 2)
         self.assertEqual(mock_browser.call_count, 2)
         mock_updater.assert_called()
@@ -38,7 +38,7 @@ class DriverInitTest(unittest.TestCase):
     @patch("selenium.webdriver.Firefox.__init__")
     def test_firefox_driver_mismatch(self, mock_browser, mock_updater):
         mock_browser.side_effect = [SessionNotCreatedException, None]
-        get_driver(BrowserType.FIREFOX, **KWARGS)
+        get_driver(Browser.FIREFOX, **KWARGS)
         mock_browser.assert_has_calls([call(ANY, **KWARGS)] * 2)
         self.assertEqual(mock_browser.call_count, 2)
         mock_updater.assert_called()
@@ -47,14 +47,14 @@ class DriverInitTest(unittest.TestCase):
     def test_ie_driver_mismatch(self, mock_browser):
         mock_browser.side_effect = [SessionNotCreatedException, None]
         with self.assertRaises(SessionNotCreatedException):
-            get_driver(BrowserType.IE, **KWARGS)
+            get_driver(Browser.IE, **KWARGS)
         mock_browser.assert_called_once_with(ANY, **KWARGS)
 
     @patch("selenium.webdriver.Edge.__init__")
     def test_edge_driver_mismatch(self, mock_browser):
         mock_browser.side_effect = [SessionNotCreatedException, None]
         with self.assertRaises(SessionNotCreatedException):
-            get_driver(BrowserType.EDGE, **KWARGS)
+            get_driver(Browser.EDGE, **KWARGS)
         mock_browser.assert_called_once_with(ANY, **KWARGS)
 
 

@@ -16,16 +16,16 @@ Tested on Python 3.8, 3.9 and 3.10.
 ## Example usage
 ### Initialization
 ```python
-from selex import get_driver, BrowserType
-driver = get_driver(BrowserType.CHROME)
+from selex import get_driver, Browser
+driver = get_driver(Browser.CHROME)
 driver.get("https://github.com/")
 ```
 ### Find element(s) by text
 A convenient way is provided to locate elements by the text they contain, bypassing the need to use xpath selectors. Optional parameter **exact_match** controls the strictness of the search.
 ```python
-driver.find_element_by_text("GitHub")  # returns the first element whose text contains the phrase "GitHub"
-driver.find_elements_by_text("GitHub")  # returns all elements whose text contains the phrase "GitHub"
-driver.find_elements_by_text("GitHub", exact_match = True)  # returns all elements whose text is precisely "GitHub"
+driver.find_element(By.TEXT, "GitHub")  # returns the first element whose text contains the phrase "GitHub"
+driver.find_elements(By.TEXT, "GitHub")  # returns all elements whose text contains the phrase "GitHub"
+driver.find_elements(By.TEXT, "GitHub", exact_match = True)  # returns all elements whose text is precisely "GitHub"
 ```
 ### Find ancestor
 Web elements can return their n-th ancestor. The ancestor's generation is selected using the **level** parameter. 
@@ -91,7 +91,7 @@ When a custom class has the Selex **Driver** as an attribute (rather than it bei
 ```python
 class BankRobbery():
 	def __init__(self):
-		self.hillary = get_driver(BrowserType.CHROME)
+		self.hillary = get_driver(Browser.CHROME)
 	@wait(10)
 	def be_useless():
 		# die and make Tommy do everything
@@ -103,5 +103,5 @@ Starting Chrome with a custom user profile is made easier by the **chrome_option
 ```python
 from selex import chrome_options
 options = chrome_options(user_data_path = PATH, profile_name = "Tanner")  # PATH points to '...\Google\Chrome\User Data'
-driver = get_driver(BrowserType.CHROME, options=options)  # starts Chromedriver using the custom profile
+driver = get_driver(Browser.CHROME, options=options)  # starts Chromedriver using the custom profile
 ```

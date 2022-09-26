@@ -1,20 +1,22 @@
+from typing import List
+
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import SessionNotCreatedException
 
-from selex.enums import BrowserType
+from selex.enums import Browser, By
 from selex.keypress import DriverKeyPress
 from selex.updater import update_chromedriver
 from selex.updater.firefox import update_geckodriver
-from selex.utils import find_elements_by_text, random_wait
+from selex.utils import find_element_by_text, find_elements_by_text, random_wait
 from selex.webelement import WebElement
 
-BASE_CLASS = {BrowserType.CHROME: webdriver.Chrome,
-              BrowserType.FIREFOX: webdriver.Firefox,
-              BrowserType.IE: webdriver.Ie,
-              BrowserType.EDGE: webdriver.Edge}
+BASE_CLASS = {Browser.CHROME: webdriver.Chrome,
+              Browser.FIREFOX: webdriver.Firefox,
+              Browser.IE: webdriver.Ie,
+              Browser.EDGE: webdriver.Edge}
 
-def get_driver(browser: BrowserType, **kwargs):
+def get_driver(browser: Browser, **kwargs):
     """
     Selex driver factory. The base class is allocated dynamically.
     """
@@ -37,13 +39,13 @@ def get_driver(browser: BrowserType, **kwargs):
             slow_type: Blindly types the text into the browser with a variable time delay between characters.
         """
         
-        def __init__(self, browser: BrowserType, **kwargs):
+        def __init__(self, browser: Browser, **kwargs):
             try:
                 getattr(webdriver, browser.value).__init__(self, **kwargs)
             except SessionNotCreatedException as caught_exc:
-                if browser is BrowserType.CHROME:
+                if browser is Browser.CHROME:
                     update_chromedriver(force=False)
-                elif browser is BrowserType.FIREFOX:
+                elif browser is Browser.FIREFOX:
                     update_geckodriver(force=False)
                 else:   # Updater not implemented
                     raise caught_exc
@@ -65,13 +67,23 @@ def get_driver(browser: BrowserType, **kwargs):
             self.implicitly_wait(value)
             self._implicit_wait = value
 
-        def find_element_by_text(self, text: str, exact_match: bool = False):
+        def find_element(self, by: By.ID, value: str = None) -> WebElement:
             """Finds and returns an element by its text value."""
-            return find_elements_by_text(self, True, text, exact_match)
+            if by is By.TEXT:
+                return find_element_by_text(self, value, True)
+            elif by is By.PARTIAL_TEXT:
+                return find_element_by_text(self, value, False)
+            else:
+                return super().find_element(by, value)
         
-        def find_elements_by_text(self, text: str, exact_match: bool = False):
+        def find_elements(self, by: By.ID, value: str = None) -> List[WebElement]:
             """Finds and returns elements by their text value."""
-            return find_elements_by_text(self, False, text, exact_match)
+            if by is By.TEXT:
+                return find_elements_by_text(self, value, True)
+            elif by is By.PARTIAL_TEXT:
+                return find_elements_by_text(self, value, False)
+            else:
+                return super().find_elements(by, value)
         
         def type_in(self, string):
             """Types in the provided string into the browser window (to no particular element)."""

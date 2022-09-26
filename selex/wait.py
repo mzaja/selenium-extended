@@ -28,7 +28,7 @@ def wait_factory(driver_attr_name: str):
         
         class HasDriverAsAttribute:
             def __init__(self):
-                self.driver = get_driver(BrowserType.CHROME)
+                self.driver = get_driver(Browser.CHROME)
             
             @wait(5)
             def method(self, *args, **kwargs):
