@@ -1,0 +1,5 @@
+# For tests
+pillow 
+coverage
+coveralls
+pyYAML
