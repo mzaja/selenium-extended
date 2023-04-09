@@ -51,7 +51,7 @@ jobs:
       run: |
         xvfb-run --auto-servernum coverage run --source=selex -m unittest discover
     - name: Upload coverage to Coveralls
-      uses: coverallsapp/github-action@v1
-      # env:
-      #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # run: coveralls --service=github
+      # uses: coverallsapp/github-action@v1   # This does not work - coverage file is looked up at the wrong location
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: coveralls --service=github
