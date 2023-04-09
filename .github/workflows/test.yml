@@ -22,11 +22,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: [3.8, 3.9, "3.10"]
+        python-version: [3.8, 3.9, "3.10", "3.11"]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python 3.x
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install Google Chrome
@@ -50,7 +50,8 @@ jobs:
     - name: Run tests
       run: |
         xvfb-run --auto-servernum coverage run --source=selex -m unittest discover
-    - name: Coveralls
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: coveralls --service=github
+    - name: Upload coverage to Coveralls
+      uses: coverallsapp/github-action@v1
+      # env:
+      #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # run: coveralls --service=github
